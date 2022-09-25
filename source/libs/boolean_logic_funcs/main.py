@@ -1,14 +1,12 @@
 import math
 
-from pylatex import Math
-
 import pandas as pd
 import dataframe_image as dfi
 
 pd.options.display.latex.repr = True
 
 
-class BooleanVector:
+class BoolVector():
 
     def __init__(self, hex_vec: str):
         self.hex = hex_vec
@@ -32,12 +30,6 @@ class BooleanVector:
         table_dict['y'] = [bit for bit in self.bin]
         return pd.DataFrame(table_dict)
 
-    def export_table_png(self):
-        dfi.export(self.bin_table, self.hex + '_table.png', table_conversion='matplotlib')
-
-    def export_table_excel(self):
-        self.bin_table.to_excel(self.hex + '_table.xlsx')
-
     def _gen_bin_col(self, vec_len, step):
         res = []
         curr = 0
@@ -54,7 +46,7 @@ class BooleanVector:
         return res
 
     @property
-    def sknf(self):
+    def sdnf(self):
         res = ''
         array = self.bin_table.loc[self.bin_table['y'] == '1'].index.values
         
@@ -74,7 +66,7 @@ class BooleanVector:
         return res[:-5] 
 
     @property
-    def sdnf(self):
+    def sknf(self):
         res = ''
         array = self.bin_table.loc[self.bin_table['y'] == '0'].index.values
         
@@ -98,16 +90,20 @@ class BooleanVector:
         file = open(self.hex + '_sdnf.txt', 'w')
         file.write(res)
         file.close()
-        return res
+        return self.hex + '_sdnf.txt'
     
     def export_sknf(self):
         res = self.sknf.replace('or', '\\vee').replace('and', '\\wedge').replace('not', '\\overline')
         file = open(self.hex + '_sknf.txt', 'w')
         file.write(res)
         file.close()
-        return res
+        return self.hex + '_sknf.txt'
+    
+    def export_table_png(self):
+        dfi.export(self.bin_table, self.hex + '_table.png', table_conversion='matplotlib')
+        return self.hex + '_table.png'
 
+    def export_table_excel(self):
+        self.bin_table.to_excel(self.hex + '_table.xlsx')
+        return self.hex + '_table.xlsx'
 
-if __name__ == '__main__':
-    bool_vec = BooleanVector("1112666b")
-    bool_vec.export_table_excel()
