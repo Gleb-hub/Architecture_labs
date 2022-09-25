@@ -1,3 +1,5 @@
+import sys
+
 import subprocess
 
 from zipfile import ZipFile
@@ -101,7 +103,7 @@ def sec_circ(lab1, wire):
 
 
 if __name__ == '__main__':
-    bv = BoolVector('3488bcce')
+    bv = BoolVector(str(sys.argv[1]))
 
     project = Logisim(name=bv.hex)
     wire = Wire()
@@ -121,7 +123,6 @@ if __name__ == '__main__':
     zipObj.write(path_table_excel)
     zipObj.write(path_to_sknf)
     zipObj.write(path_to_sdnf)
+    zipObj.write('manual.txt')
 
-
-    subprocess.run(['logisim', path_logisim])
-    subprocess.run(['rm', path_table_png, path_table_excel, path_to_sdnf, path_to_sknf])
+    subprocess.run(['rm', path_logisim, path_table_png, path_table_excel, path_to_sdnf, path_to_sknf])
