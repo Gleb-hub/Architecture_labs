@@ -3,7 +3,6 @@ import math
 import pandas as pd
 import dataframe_image as dfi
 
-pd.options.display.latex.repr = True
 
 
 class BoolVector():
@@ -58,7 +57,7 @@ class BoolVector():
                 if int(bit) == 1:
                     res += 'x_' + str(rank)
                 else:
-                    res += 'not x_' + str(rank)
+                    res += 'not{x_' + str(rank) + '}'
                 res += ' or '
 
             res = res[:-4]
@@ -78,7 +77,7 @@ class BoolVector():
                 if int(bit) == 0:
                     res += 'x_' + str(rank)
                 else:
-                    res += 'not x_' + str(rank)
+                    res += 'not{x_' + str(rank) + '}'
                 res += ' and '
 
             res = res[:-5]
@@ -91,6 +90,20 @@ class BoolVector():
         file.write(res)
         file.close()
         return self.hex + '_sdnf.txt'
+    
+    def latex_sdnf(self):
+        res = self.sdnf.replace('or', '\\vee').replace('and', '\\wedge').replace('not', '\\overline')
+        print(res)
+        return """\begin{multline}
+a+b+с+ \\
++d+e+f+ \\
++g+h+i.
+\end{multline}"""
+
+    
+    def latex_sknf(self):
+        res = self.sknf.replace('or', '\\vee').replace('and', '\\wedge').replace('not', '\\overline')
+        return f'$СКНФ={res}$'
     
     def export_sknf(self):
         res = self.sknf.replace('or', '\\vee').replace('and', '\\wedge').replace('not', '\\overline')
@@ -106,4 +119,7 @@ class BoolVector():
     def export_table_excel(self):
         self.bin_table.to_excel(self.hex + '_table.xlsx')
         return self.hex + '_table.xlsx'
+
+    def mdnf(self):
+        pass
 
